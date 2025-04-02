@@ -65,11 +65,11 @@ spec:
         # блок про ресурсы
         resources:
           requests:
-            cpu: 100m
+            cpu: 0.1
             # согласно условиям задачи ставим 128M
             memory: 128Mi
           limits:
-            cpu: 250m
+            cpu: 0.25
             memory: 192Mi
         # Проверки живучести приложения, startupProbe — запущено ли приложение внутри контейнера?
         startupProbe:
@@ -102,26 +102,3 @@ spec:
           timeoutSeconds: 2
           # сколько раз пробовать попытку, если она провалилась (по умолчанию 1 раз)
           failureThreshold: 2
-
----
-# Масштабирование при увеличении дневной нагрузки
-apiVersion: autoscaling/v2beta1
-# HorizontalPodAutoscaler для автоматического горизонтального масштабирования
-kind: HorizontalPodAutoscaler
-metadata:
-  name: some-app-hpa
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: some-app
-  # Соответствует числу реплик в основном deployment
-  minReplicas: 5
-  # Значение maxReplicas требует уточнения, исходя из максимальной фактической нагрузки
-  maxReplicas: 10
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      # параметр агрессивности масштабирования
-      targetAverageUtilization: 80

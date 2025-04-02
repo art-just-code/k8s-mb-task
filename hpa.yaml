@@ -1,0 +1,21 @@
+---
+# HorizontalPodAutoscaler для автоматического горизонтального масштабирования. В нашем случае при увеличении дневной нагрузки
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: some-app-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: some-app
+  # Соответствует числу реплик в основном deployment
+  minReplicas: 5
+  # Значение maxReplicas требует уточнения, исходя из максимальной фактической нагрузки
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      # параметр агрессивности масштабирования
+      targetAverageUtilization: 80
